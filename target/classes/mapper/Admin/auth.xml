@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Pkg.Admin.AuthList">
+
+
+	<!--  
+	<resultMap id="boardMap" type="Pkg.Boards.VO.BoardVO">
+		<result property= "idx" column="IDX" />
+		<result property= "title" column="TITLE" />
+		<result property= "userID" column="USERID" />
+	</resultMap>
+	-->
+	
+	<select id="selectAuthList" resultMap= "Pkg.Admin.maps.AuthMap" parameterType= "Pkg.Admin.DTO.AuthDTO" statementType="CALLABLE">
+		 {
+		 	call PKG_ADMIN_AUTH.PROC_SEL_AUTH(
+		 		#{authName, jdbcType = VARCHAR, mode = IN}
+		 		,#{result, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=AuthMap}
+		 	)
+		 }
+	</select>
+	
+	
+	<select id="saveAuthList"  parameterType= "Pkg.Admin.DTO.AuthDTO" statementType="CALLABLE">
+		 {
+		 <!--  배열말고, 하나씩 DAO에서 값을 받아서 DB를 돌린다.  -->
+		 	call PKG_ADMIN_AUTH.PROC_SAVE_AUTH(
+		 		#{authID, jdbcType = VARCHAR, mode = IN}
+		 		,#{authName, jdbcType = VARCHAR, mode = IN}
+		 		,#{gbn, jdbcType = VARCHAR, mode = IN}
+		 		,#{errCode, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}
+		 		,#{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}
+		 	)
+		 }
+	</select>
+
+	
+	<select id="delAuthList"  parameterType= "Pkg.Admin.DTO.AuthDTO" statementType="CALLABLE">
+		 {
+		 	call PKG_ADMIN_AUTH.PROC_DELETE_AUTH(
+		 		#{authID, jdbcType = VARCHAR, mode = IN}
+		 		,#{errCode, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}
+		 		,#{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}
+		 	)
+		 }
+	</select>
+
+	
+</mapper>

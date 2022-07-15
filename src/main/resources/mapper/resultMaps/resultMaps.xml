@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Pkg.Admin.maps">
+
+	<resultMap id="AuthMap" type="Pkg.Admin.DTO.AuthDTO">
+		<result property= "authID" column="AUTHID" />
+		<result property= "authName" column="AUTHNAME" />
+	</resultMap>	
+	<resultMap id="AuthMemberMap" type="Pkg.Admin.DTO.AuthMemberDTO">
+		<result property= "mID" column="MID" />
+		<result property= "mName" column="MNAME" />
+		<result property= "authID" column="AUTHID" />
+		<result property= "authName" column="AUTHNAME" />
+		<result property= "mthID" column="MTHID" />
+	</resultMap>
+	<resultMap id="ProgramMap" type="Pkg.Admin.DTO.ProgramDTO">
+		<result property= "pID" column="PID" />
+		<result property= "menuID" column="MENUID" />
+		<result property= "pName" column="PNAME" />
+		<result property= "pFileName" column="PFILENAME" />
+		<result property= "fileUrl" column="FILEULR" />
+	</resultMap>
+
+	
+	<resultMap id="SUBMenuMap" type="Pkg.Admin.DTO.MenuDTO">
+		<result property= "menuID" column="MENUID" />
+		<result property= "menuName" column="MENUNAME" />
+	</resultMap>
+	
+	<resultMap id="MenuMap" type="Pkg.Admin.DTO.MenuDTO">
+		<result property= "menuID" column="MENUID" />
+		<result property= "menuName" column="MENUNAME" />
+		<result property= "menuSeq" column="MENUSEQ" />
+		<result property= "menuLvl" column="MENULVL" />
+		<result property= "parentID" column="PARENTID" />
+	</resultMap>
+	
+</mapper>

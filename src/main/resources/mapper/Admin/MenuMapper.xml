@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+        
+ <mapper namespace="Pkg.Admin.MenuList">
+
+
+ 	<select id="selectMenuList" resultMap= "Pkg.Admin.maps.MenuMap" parameterType= "Pkg.Admin.DTO.MenuDTO" statementType="CALLABLE">
+		 {
+		 	call PKG_ADMIN_MENUS.PROC_SEL_MENUS(
+		 		#{menuName, jdbcType = VARCHAR, mode = IN}
+		 		,#{result, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=Pkg.Admin.maps.MenuMap}
+		 	)
+		 }
+	</select>
+	
+	
+	
+	<select id="saveMenus"  parameterType= "Pkg.Admin.DTO.MenuDTO" statementType="CALLABLE">
+		 {
+		 <!--  배열말고, 하나씩 DAO에서 값을 받아서 DB를 돌린다.  -->
+		 	call PKG_ADMIN_MENUS.PROC_SAVE_MENUS(
+		 		#{menuID, jdbcType = VARCHAR, mode = IN}
+		 		,#{menuName, jdbcType = VARCHAR, mode = IN}
+		 		,#{menuSeq, jdbcType = VARCHAR, mode = IN} 
+		 	)
+		 }
+	</select>
+	
+	<select id="delMenus"  parameterType= "Pkg.Admin.DTO.MenuDTO" statementType="CALLABLE">
+		 {
+		 <!--  배열말고, 하나씩 DAO에서 값을 받아서 DB를 돌린다.  -->
+		 	call PKG_ADMIN_MENUS.PROC_DEL_MENUS(
+		 		#{menuID, jdbcType = VARCHAR, mode = IN}	 
+		 	)
+		 }
+	</select>
+	
+	
+	<select id="selectSubMenuList" resultMap= "Pkg.Admin.maps.MenuMap" parameterType= "Pkg.Admin.DTO.MenuDTO" statementType="CALLABLE">
+		 {
+		 	call PKG_ADMIN_MENUS.PROC_SEL_SUBMENUS(
+		 		#{menuID, jdbcType = VARCHAR, mode = IN}
+		 		,#{result, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=Pkg.Admin.maps.MenuMap}
+		 	)
+		 }
+	</select>
+	
+	
+	
+	<select id="saveSubMenus"  parameterType= "Pkg.Admin.DTO.MenuDTO" statementType="CALLABLE">
+		 {
+		 <!--  배열말고, 하나씩 DAO에서 값을 받아서 DB를 돌린다.  -->
+		 	call PKG_ADMIN_MENUS.PROC_SAVE_SUBMENUS(
+		 		#{menuID, jdbcType = VARCHAR, mode = IN}
+		 		,#{menuName, jdbcType = VARCHAR, mode = IN}
+		 		,#{menuSeq, jdbcType = VARCHAR, mode = IN} 
+		 		,#{menuLvl, jdbcType = VARCHAR, mode = IN} 
+		 		,#{parentID, jdbcType = VARCHAR, mode = IN} 
+		 	)
+		 }
+	</select>
+
+	
+ 	
+ 
+ 
+ </mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+   
+	<!-- component를 알아 볼수 있게 만드는 코드 -->
+	<context:component-scan base-package="Pkg.Admin.*"></context:component-scan>
+	<!-- 주석들을 알아 볼수 있게 만드는 코드 -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<mvc:resources location="/WEB-INF/resources/" mapping="/jscss/**"></mvc:resources>
+	
+	<!-- InternalResourceViewResolver클래스를 가져오기 위한 코드 왜? WEN-INF폴더밑에는 클라이언트가 접속못하니  -> 서버단에서는 접근이 가능하도록-->
+	<!-- 서버단에서는 WEB-INF에 접근이 가능하다. 하지만 접근하려면, 매번 WEB-INF/views... 등등 경로를 쳐야하는데, 이 수고를 덜어준다.-->
+	<!--  지금 이 설정과, web.xml에서 설정한  dispatcher-servlet설정은  "/"  즉, 모든 url은 이 dispatcher.servlet.xml을 거치도록 설정해놓은것.  -->
+	<!-- 만약에 설정이 /* 이면   모든경로를 다 받는다는 의미인데, 이 말은 컨트롤러에서 뷰 페이지에 넘겨줄려고해도, 반드시 dispatcher 서블릿을 거쳐야한다는 뜻이다.-->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="WEB-INF/views" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	
+	
+	<!--  
+	      우리가 다운받은 jdbc자르 파일 중 하나인 클래스를 빈 명령어로 메모리에 올려놓고 쓰고 싶어서..  DriverManagerDataSource 라는 클래스.
+	      커넥션을 대체하는 클래스다. 하지만 이 bean 오브젝트는 밑에 나오는 bean오브젝트 안으로 주입될것이니, 직접 호출할 일은 없다.     
+	 -->
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+	  <property value="oracle.jdbc.driver.OracleDriver" name="driverClassName" />
+	  <property value="jdbc:oracle:thin:@localhost:1521:xe" name="url" />
+	  <property value="auth" name="username" />
+	  <property value="1" name="password" />
+	</bean>
+	
+	
+	<!--   이    SqlSessionFactoryBean클래스는 위의 커넥션 클래스를 쓰기떄문에, 위에있는 커넥션 클래스는 전혀 쓰찌않고, 이 빈에서 쓸것이다. ref에 있는 dataSource라는 id가 위에꺼랑 일치한다.   즉 이 클래스는 커넥션을 가져다 쓰는 callableStatement같은 느낌.   mybatis 라이브러리의 일부 파일 사용. (SqlSessionFactoryBean 클래스)	            -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+	  <property name="dataSource" ref="dataSource" />
+	  <!--<property value="classpath:mybatis-config.xml" name="configLocation" />-->
+	  <property value="classpath:/mapper/**/*.xml" name="mapperLocations" />
+	</bean>
+
+
+
+     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>    	
+    </bean>
+    
+    
+   
+    <mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/AdminLogin"/>
+			<mvc:exclude-mapping path="/MissLogin"/>
+			<bean id="loginInterceptor" class=" Pkg.Admin.Interceptors.LoginInterceptor"/>
+		</mvc:interceptor>	
+	</mvc:interceptors>
+	
+
+
+
+	
+	
+	
+</beans>

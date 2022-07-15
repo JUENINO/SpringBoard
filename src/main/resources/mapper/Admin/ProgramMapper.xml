@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+        
+ <mapper namespace="Pkg.Admin.ProgramList">
+ 
+
+ 	<select id="selectProgramList" resultMap= "Pkg.Admin.maps.ProgramMap" parameterType= "Pkg.Admin.DTO.ProgramDTO" statementType="CALLABLE">
+		 {
+		 	call PKG_ADMIN_PROGRAMS.PROC_PROGRAMS_SEL(
+		 		#{pName, jdbcType = VARCHAR, mode = IN}
+		 		,#{result, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=Pkg.Admin.maps.ProgramMap}
+		 	)
+		 }
+	</select>
+	<select id="selectSUBMenuList" resultMap= "Pkg.Admin.maps.SUBMenuMap" parameterType= "String" statementType="CALLABLE">
+		 {
+		 	call PKG_ADMIN_PROGRAMS.PROC_MENUS_SEL(
+		 		#{result, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=Pkg.Admin.maps.SUBMenuMap}
+		 	)
+		 }
+	</select>
+	
+	
+	<select id="savePrograms"  parameterType= "Pkg.Admin.DTO.ProgramDTO" statementType="CALLABLE">
+		 {
+		 <!--  배열말고, 하나씩 DAO에서 값을 받아서 DB를 돌린다.  -->
+		 	call PKG_ADMIN_PROGRAMS.PROC_MENUS_SAVE(
+		 		#{pID, jdbcType = VARCHAR, mode = IN}
+		 		,#{menuID, jdbcType = VARCHAR, mode = IN}
+		 		,#{pName, jdbcType = VARCHAR, mode = IN}
+		 		,#{pFileName, jdbcType = VARCHAR, mode = IN}
+		 		,#{fileUrl, jdbcType = VARCHAR, mode = IN}
+		 
+		 	)
+		 }
+	</select>
+	
+	
+	<select id="delPrograms"  parameterType= "Pkg.Admin.DTO.ProgramDTO" statementType="CALLABLE">
+		 {
+		 <!--  배열말고, 하나씩 DAO에서 값을 받아서 DB를 돌린다.  -->
+		 	call PKG_ADMIN_PROGRAMS.PROC_PROGRAMS_DEL(
+		 		#{pID, jdbcType = VARCHAR, mode = IN}	 
+		 	)
+		 }
+	</select>
+	
+	
+	
+
+	
+	
+	
+	
+ 	
+ 
+ 
+ </mapper>
